@@ -12,7 +12,9 @@ func main() {
 	http.Handle("GET /static/", http.StripPrefix("/static/",fs))
 	http.HandleFunc("GET /home", home)
 	fmt.Printf("Starting serve at port :8080\n")
-	http.ListenAndServe(":8080", nil)
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		fmt.Printf("err: %s\n", err.Error())
+	}
 }
 
 func home(w http.ResponseWriter, r *http.Request) {

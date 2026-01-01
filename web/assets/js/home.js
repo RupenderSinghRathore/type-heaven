@@ -3,11 +3,20 @@ document.addEventListener("DOMContentLoaded", () => {
   let wordIdx = 0;
   let charIdx = 0;
   let incorrectCount = 0;
+  let startTime = null;
+  let isTyping = false;
+  let correctChar = 0;
+  let errorCount = 0;
 
   // Elements
   const words = document.querySelectorAll(".word");
   const caret = document.getElementById("caret");
   const typingArea = document.getElementById("typing-area");
+  const wpm = document.getElementById("wpm");
+  const accuracy = document.getElementById("Accuracy");
+  if (!wpm) {
+    console.log(`fucked`);
+  }
 
   // Init
   if (words.length > 0) {
@@ -18,6 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   typingArea.addEventListener("keydown", (e) => {
+    if (!isTyping) {
+      const isModifier = ["Control", "Alt", "Shift", "Meta", "CapsLock"].includes(e.key);
+      if (!isModifier) {
+        isTyping = true;
+        startTime = new Date().getTime();
+      }
+    }
+
     let currWord = words[wordIdx];
     let currChar = currWord.children[charIdx];
     // console.log(
@@ -28,55 +45,53 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currChar && !currChar.classList.contains("incorrect") && e.key === currChar.innerText) {
       currChar.classList.add("correct");
       charIdx++;
+      correctChar++;
     }
     // Handle Space
     else if (e.code == "Space") {
       // e.preventDefault(); // Prevent scrolling
-      if (!currChar) {
+      if (charIdx !== 0 && wordIdx + 1 < words.length) {
+        if (currChar) {
+          errorCount++;
+        }
         currWord.classList.remove("active");
+        while (charIdx < currWord.children.length) {
+          currWord.children[charIdx].classList.add("skipped");
+          charIdx++;
+        }
         wordIdx++;
-        if (wordIdx < words.length) {
-          words[wordIdx].classList.add("active");
-        }
         charIdx = 0;
+        currWord = words[wordIdx];
+        currWord.classList.add("active");
       }
-    } else if (e.key == "Backspace") {
-      const isCtrl = e.ctrlKey;
-      const performBackspace = () => {
-        if (charIdx > 0) {
-          charIdx--;
-          let prev = currWord.children[charIdx];
-          if (prev.classList.contains("incorrect")) {
-            prev.remove();
-            incorrectCount--;
-          } else {
-            currWord.children[charIdx].classList.remove("correct");
-          }
-        } else if (wordIdx > 0) {
-          words[wordIdx].classList.remove("active");
-          wordIdx--;
-          words[wordIdx].classList.add("active");
-          charIdx = words[wordIdx].children.length;
-        }
-      };
+    }
 
+    // custom Backspace
+    else if (e.ctrlKey && e.key === "h") {
+      e.preventDefault();
+      performBackspace();
+    }
+    // Handle Backspace
+    else if (e.key == "Backspace") {
+      const isCtrl = e.ctrlKey;
       // Handle Ctrl+Backspace
       if (isCtrl) {
         if (charIdx === 0) {
           performBackspace();
         }
         let idx = charIdx - 1;
-        while (idx > 0) {
+        while (idx >= 0) {
           let char = words[wordIdx].children[idx];
           if (char.classList.contains("incorrect")) {
             char.remove();
             incorrectCount--;
           } else {
-            char.classList.remove("correct");
+            if (char.classList.contains("correct")) correctChar--;
+            char.classList.remove("correct", "skipped");
           }
           idx--;
         }
-        charIdx = idx;
+        charIdx = idx + 1;
       } else {
         performBackspace();
       }
@@ -84,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle Wrong keys
     else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      errorCount++;
       if (incorrectCount < 5) {
         const newChar = document.createElement("span");
         newChar.innerText = e.key;
@@ -113,4 +129,41 @@ document.addEventListener("DOMContentLoaded", () => {
     caret.style.transform = `translate(${left}px, ${top}px)`;
     // caret.style.opacity = "1";
   }
+  function performBackspace() {
+    if (charIdx > 0) {
+      charIdx--;
+      let currWord = words[wordIdx];
+      let prev = currWord.children[charIdx];
+      if (prev.classList.contains("incorrect")) {
+        prev.remove();
+        incorrectCount--;
+      } else {
+        if (prev.classList.contains("correct")) correctChar--;
+        prev.classList.remove("correct");
+      }
+    } else if (wordIdx > 0) {
+      words[wordIdx].classList.remove("active");
+      wordIdx--;
+      words[wordIdx].classList.add("active");
+      charIdx = words[wordIdx].children.length;
+      let prev = words[wordIdx].children[charIdx - 1];
+      while (prev.classList.contains("skipped")) {
+        prev.classList.remove("skipped");
+        charIdx--;
+        prev = prev.previousSibling;
+      }
+    }
+  }
+  function updateWps() {
+    if (!isTyping) return;
+    let time = (new Date().getTime() - startTime) / 60000;
+    const wpm = document.getElementById("wpm");
+    wpm.innerText = Math.floor(correctChar / 5 / time);
+  }
+  function updateAccuracy() {
+    let acc = Math.floor((correctChar / (correctChar + errorCount)) * 100);
+    accuracy.innerText = acc >= 0? acc : 100;
+  }
+  setInterval(updateWps, 500);
+  setInterval(updateAccuracy, 500);
 });

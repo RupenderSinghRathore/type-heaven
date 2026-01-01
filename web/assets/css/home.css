@@ -40,6 +40,10 @@
   display: inline-block;
 }
 .char.correct {
+  color: #90eea6;
+}
+.char.skipped {
+  color: #fae886;
 }
 .char.incorrect {
   color: #e84411;
