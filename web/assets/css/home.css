@@ -1,28 +1,30 @@
-/* The container must be relative so the caret moves relative to IT, not the whole page */
+* {
+  color: #a0bed6;
+  background-color: #1a1b26;
+}
+
 #typing-area {
   position: relative;
-  font-family: "Roboto Mono", monospace; /* Monospace is easier for alignment */
-  margin: 0 10px 0 10px;
+  font-family: "Ubuntu", "Roboto Mono", "Vazeirmatn", monospace;
+  margin: 0 48px 0 48px;
+  /* padding: 0 16px 0 16px; */
   font-size: 1.5rem;
   line-height: 2rem;
 }
+#typing-area:focus {
+  outline: none;
+}
 
 #caret {
-  /* Critical for floating */
   position: absolute;
 
-  /* Size of the cursor */
-  width: 2px;
-  height: 2rem; /* Match your font-size roughly */
-  background-color: #e2b714; /* Yellow color */
+  width: 3px;
+  height: 2rem;
+  background-color: #a0bed6;
 
-  /* The smooth animation */
-  transition:
-    left 0.1s ease,
-    top 0.1s ease;
+  transition: transform 0.1s ease;
 
-  /* Start it hidden or at 0,0 until JS loads */
-  opacity: 0;
+  /* opacity: 0; */
   left: 0;
   top: 0;
 }
@@ -34,12 +36,13 @@
 
 /* Optional: Styling for letters */
 .char {
-  color: #646669;
   white-space: pre;
   display: inline-block;
 }
 .char.correct {
-  color: #d1d0c5;
+}
+.char.incorrect {
+  color: #e84411;
 }
 .char.active {
   /* No border needed here, the floating div does the job */

@@ -26,9 +26,9 @@ templ Home(words []string) {
 		<body>
 			<h4>Common words</h4>
 			<div id="typing-area">
-				// NOTE: limit to randomly generated 50 words only
+				// NOTE: limit to randomly generated 40 words only
 				<div id="caret"></div>
-				for idx := range randomSeq(50, len(words)) {
+				for idx := range randomSeq(40, len(words)) {
 					<div class="word">
 						for _, c := range words[idx] {
 							<span class="char">{ string(c) }</span>
