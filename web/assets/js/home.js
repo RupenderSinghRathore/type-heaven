@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Elements
+  const words = document.getElementsByClassName("word");
+  const caret = document.getElementById("caret");
+  const typingArea = document.getElementById("typing-area");
+  const wpm = document.getElementById("wpm");
+  const accuracy = document.getElementById("Accuracy");
+  if (!wpm) {
+    console.log(`fucked`);
+  }
+
   // state
   let wordIdx = 0;
   let charIdx = 0;
@@ -7,16 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let isTyping = false;
   let correctChar = 0;
   let errorCount = 0;
-
-  // Elements
-  const words = document.querySelectorAll(".word");
-  const caret = document.getElementById("caret");
-  const typingArea = document.getElementById("typing-area");
-  const wpm = document.getElementById("wpm");
-  const accuracy = document.getElementById("Accuracy");
-  if (!wpm) {
-    console.log(`fucked`);
-  }
+  let lineHieght = parseFloat(window.getComputedStyle(typingArea).lineHeight);
+  console.log(`lineHeight: ${lineHieght}`);
 
   // Init
   if (words.length > 0) {
@@ -63,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
         charIdx = 0;
         currWord = words[wordIdx];
         currWord.classList.add("active");
+        incorrectCount = 0;
+        deleteTopLine();
       }
     }
 
@@ -162,7 +166,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function updateAccuracy() {
     let acc = Math.floor((correctChar / (correctChar + errorCount)) * 100);
-    accuracy.innerText = acc >= 0? acc : 100;
+    accuracy.innerText = acc >= 0 ? acc : 100;
+  }
+  function scrollLine(num) {
+    typingArea.scrollTop = lineHieght * num;
+  }
+  function deleteTopLine() {
+    firstLine = words[0].offsetTop;
+    activeLine = words[wordIdx].offsetTop;
+    if (activeLine - firstLine >= 2 * lineHieght) {
+      // TODO: Delete all from firstLine
+      let wordsToDelete = [];
+      let currOffset = firstLine;
+      for (let i = 0; currOffset === firstLine; i++) {
+        currOffset = words[i + 1].offsetTop;
+        wordsToDelete.push(words[i]);
+      }
+      wordsToDelete.forEach((word) => word.remove());
+      wordIdx -= wordsToDelete.length
+    }
   }
   setInterval(updateWps, 500);
   setInterval(updateAccuracy, 500);

@@ -14,10 +14,10 @@ func randomSeq(count, max int) iter.Seq[int] {
 	}
 }
 
-templ textArea(words []string) {
+templ textArea(words []string, wordCount int) {
 	<div id="typing-area">
 		<div id="caret"></div>
-		for idx := range randomSeq(30, len(words)) {
+		for idx := range randomSeq(wordCount, len(words)) {
 			<div class="word">
 				for _, c := range words[idx] {
 					<span class="char">{ string(c) }</span>
@@ -40,7 +40,7 @@ templ header() {
 	</div>
 }
 
-templ Home(words []string) {
+templ Home(words []string, wordCount int) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -52,7 +52,7 @@ templ Home(words []string) {
 		<body>
 			@header()
 			<h4>Common words</h4>
-			@textArea(words)
+			@textArea(words, wordCount)
 			<script src="/static/js/home.js"></script>
 		</body>
 	</html>

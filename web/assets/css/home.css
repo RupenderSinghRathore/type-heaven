@@ -4,12 +4,20 @@
 }
 
 #typing-area {
+  --line-height: 2rem;
+  --lines-to-show: 3;
+
   position: relative;
+
   font-family: "Ubuntu", "Roboto Mono", "Vazeirmatn", monospace;
-  margin: 0 48px 0 48px;
-  /* padding: 0 16px 0 16px; */
   font-size: 1.5rem;
-  line-height: 2rem;
+  margin: 0 48px 0 48px;
+  line-height: var(--line-height);
+
+  display: -webkit-box;
+  -webkit-line-clamp: var(--lines-to-show);
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 #typing-area:focus {
   outline: none;
