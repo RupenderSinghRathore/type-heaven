@@ -1,4 +1,8 @@
 package pages
 
-templ resultPage() {
+templ ResultPage() {
+	<div id="result-page">
+		<h3>Result Page</h3>
+		<button hx-post="/loadHome" hx-target="#result-page" hx-trigger="click" hx-swap="outerHTML">❯ finish</button>
+	</div>
 }

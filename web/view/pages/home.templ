@@ -14,20 +14,11 @@ func randomSeq(count, max int) iter.Seq[int] {
 	}
 }
 
-templ textArea(words []string, wordCount int) {
-	<div id="typing-area">
-		<div id="caret"></div>
-		for idx := range randomSeq(wordCount, len(words)) {
-			<div class="word">
-				for _, c := range words[idx] {
-					<span class="char">{ string(c) }</span>
-				}
-			</div>
-		}
-	</div>
+templ cssStyle() {
+	<link rel="stylesheet" href="/static/css/home.css"/>
 }
 
-templ header() {
+templ liveStat() {
 	<div id="live stats">
 		<div>
 			<span>{ "wpm:" }</span>
@@ -40,20 +31,25 @@ templ header() {
 	</div>
 }
 
+templ TypingArea(words []string, wordCount int) {
+	<div id="typing-area">
+		<div id="caret"></div>
+		for idx := range randomSeq(wordCount, len(words)) {
+			<div class="word">
+				for _, c := range words[idx] {
+					<span class="char">{ string(c) }</span>
+				}
+			</div>
+		}
+	</div>
+}
+
 templ Home(words []string, wordCount int) {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<link rel="stylesheet" href="/static/css/home.css"/>
-			<title>Typeing</title>
-		</head>
-		<body>
-			@header()
-			<h4>Common words</h4>
-			@textArea(words, wordCount)
-			<script src="/static/js/home.js"></script>
-		</body>
-	</html>
+	<div id="home">
+		@liveStat()
+		@TypingArea(words, wordCount)
+		<button hx-post="/reloadTest" hx-target="#typing-area" hx-trigger="click" hx-swap="outerHTML">↻</button>
+		<button hx-post="/showResult" hx-target="#home" hx-trigger="click" hx-swap="outerHTML">❯ finish</button>
+		<script src="/static/js/home.js"></script>
+	</div>
 }

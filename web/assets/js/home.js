@@ -1,34 +1,65 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Elements
-  const words = document.getElementsByClassName("word");
-  const caret = document.getElementById("caret");
-  const typingArea = document.getElementById("typing-area");
-  const wpm = document.getElementById("wpm");
-  const accuracy = document.getElementById("Accuracy");
-  if (!wpm) {
-    console.log(`fucked`);
-  }
+  let words;
+  let caret;
+  let typingArea;
+  let wpm;
+  let accuracy;
 
   // state
-  let wordIdx = 0;
-  let charIdx = 0;
-  let incorrectCount = 0;
-  let startTime = null;
-  let isTyping = false;
-  let correctChar = 0;
-  let errorCount = 0;
-  let lineHieght = parseFloat(window.getComputedStyle(typingArea).lineHeight);
-  console.log(`lineHeight: ${lineHieght}`);
+  let wordIdx;
+  let charIdx;
+  let incorrectCount;
+  let startTime;
+  let isTyping;
+  let correctChar;
+  let errorCount;
+  let lineHieght;
 
   // Init
-  if (words.length > 0) {
-    words[wordIdx].classList.add("active");
-    typingArea.tabIndex = 0;
-    typingArea.focus();
-    updateCaret();
-  }
+  function init() {
+    words = document.getElementsByClassName("word");
+    if (words.length > 0) {
+      // Elements
+      caret = document.getElementById("caret");
+      typingArea = document.getElementById("typing-area");
+      wpm = document.getElementById("wpm");
+      accuracy = document.getElementById("Accuracy");
 
-  typingArea.addEventListener("keydown", (e) => {
+      // state
+      wordIdx = 0;
+      charIdx = 0;
+      incorrectCount = 0;
+      startTime = null;
+      isTyping = false;
+      correctChar = 0;
+      errorCount = 0;
+      lineHieght = parseFloat(window.getComputedStyle(typingArea).lineHeight);
+
+      const updateStat = setInterval(() => {
+        if (!document.getElementById("home")) {
+          clearInterval(updateStat);
+          return;
+        }
+        updateWpm();
+        updateAccuracy();
+      }, 500);
+
+      words[wordIdx].classList.add("active");
+      typingArea.tabIndex = 0;
+      typingArea.focus();
+      typingArea.removeEventListener("keydown", HandleTyping);
+      typingArea.addEventListener("keydown", HandleTyping);
+      setTimeout(() => {
+        updateCaret();
+      }, 100);
+      wpm.innerText = 0;
+      accuracy.innerText = 100;
+    }
+  }
+  init();
+
+  function HandleTyping(e) {
     if (!isTyping) {
       const isModifier = ["Control", "Alt", "Shift", "Meta", "CapsLock"].includes(e.key);
       if (!isModifier) {
@@ -117,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     updateCaret();
-  });
+  }
 
   function updateCaret() {
     const activeChar = words[wordIdx].children[charIdx];
@@ -158,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-  function updateWps() {
+  function updateWpm() {
     if (!isTyping) return;
     let time = (new Date().getTime() - startTime) / 60000;
     const wpm = document.getElementById("wpm");
@@ -167,9 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateAccuracy() {
     let acc = Math.floor((correctChar / (correctChar + errorCount)) * 100);
     accuracy.innerText = acc >= 0 ? acc : 100;
-  }
-  function scrollLine(num) {
-    typingArea.scrollTop = lineHieght * num;
   }
   function deleteTopLine() {
     firstLine = words[0].offsetTop;
@@ -183,9 +211,13 @@ document.addEventListener("DOMContentLoaded", () => {
         wordsToDelete.push(words[i]);
       }
       wordsToDelete.forEach((word) => word.remove());
-      wordIdx -= wordsToDelete.length
+      wordIdx -= wordsToDelete.length;
     }
   }
-  setInterval(updateWps, 500);
-  setInterval(updateAccuracy, 500);
+
+  document.addEventListener("htmx:afterSwap", (e) => {
+    if (e.detail.target.id === "typing-area" || e.detail.target.id === "result-page") {
+      init();
+    }
+  });
 });
