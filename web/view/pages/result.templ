@@ -1,8 +1,21 @@
 package pages
 
-templ ResultPage() {
+type ResultData struct {
+	Wpm      string 
+	Accuracy string
+}
+
+templ ResultPage(resultData *ResultData) {
 	<div id="result-page">
 		<h3>Result Page</h3>
+		<div>
+			<span>{ "wpm:" }</span>
+			<span id="wpm">{ resultData.Wpm }</span>
+		</div>
+		<div>
+			<span>{ "Accuracy:" }</span>
+			<span id="accuracy">{ resultData.Accuracy }</span>
+		</div>
 		<button hx-post="/loadHome" hx-target="#result-page" hx-trigger="click" hx-swap="outerHTML">❯ finish</button>
 	</div>
 }

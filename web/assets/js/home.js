@@ -1,19 +1,36 @@
+window.gameState = window.gameState || {
+  wpm: [],
+  acc: [],
+};
 document.addEventListener("DOMContentLoaded", () => {
   // Elements
+  /** @type {HTMLCollectionOf<Element>} */
   let words;
+  /** @type {HTMLElement | null} */
   let caret;
+  /** @type {HTMLElement | null} */
   let typingArea;
+  /** @type {HTMLElement | null} */
   let wpm;
+  /** @type {HTMLElement | null} */
   let accuracy;
 
   // state
+  /** @type {number} */
   let wordIdx;
+  /** @type {number} */
   let charIdx;
+  /** @type {number} */
   let incorrectCount;
+  /** @type {number | null} */
   let startTime;
+  /** @type {boolean} */
   let isTyping;
+  /** @type {number} */
   let correctChar;
+  /** @type {number} */
   let errorCount;
+  /** @type {number} */
   let lineHieght;
 
   // Init
@@ -24,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       caret = document.getElementById("caret");
       typingArea = document.getElementById("typing-area");
       wpm = document.getElementById("wpm");
-      accuracy = document.getElementById("Accuracy");
+      accuracy = document.getElementById("accuracy");
 
       // state
       wordIdx = 0;
@@ -79,11 +96,16 @@ document.addEventListener("DOMContentLoaded", () => {
       currChar.classList.add("correct");
       charIdx++;
       correctChar++;
+      // console.log(`len: ${words.length}, ${wordIdx}`);
+      // console.log(`char: ${currWord.children.length}, ${charIdx}`);
+      if (wordIdx === words.length - 1 && charIdx === currWord.children.length) {
+        finishTest();
+      }
     }
     // Handle Space
     else if (e.code == "Space") {
       // e.preventDefault(); // Prevent scrolling
-      if (charIdx !== 0 && wordIdx + 1 < words.length) {
+      if (wordIdx < words.length - 1 && charIdx !== 0) {
         if (currChar) {
           errorCount++;
         }
@@ -98,6 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
         currWord.classList.add("active");
         incorrectCount = 0;
         deleteTopLine();
+      } else if (wordIdx == words.length - 1) {
+        finishTest();
       }
     }
 
@@ -212,6 +236,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       wordsToDelete.forEach((word) => word.remove());
       wordIdx -= wordsToDelete.length;
+    }
+  }
+  function finishTest() {
+    let btn = document.getElementById("finish-btn");
+    if (btn) {
+      btn.click();
     }
   }
 

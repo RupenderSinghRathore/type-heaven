@@ -2,6 +2,7 @@ package pages
 
 import "math/rand/v2"
 import "iter"
+import "RupenderSinghRathore/type-heaven/internal/modals"
 
 func randomSeq(count, max int) iter.Seq[int] {
 	return func(yield func(int) bool) {
@@ -26,17 +27,17 @@ templ liveStat() {
 		</div>
 		<div>
 			<span>{ "Accuracy:" }</span>
-			<span id="Accuracy">{ "100" }</span>
+			<span id="accuracy">{ "100" }</span>
 		</div>
 	</div>
 }
 
-templ TypingArea(words []string, wordCount int) {
+templ TypingArea(words *modals.CommonWords, wordCount int) {
 	<div id="typing-area">
 		<div id="caret"></div>
-		for idx := range randomSeq(wordCount, len(words)) {
+		for idx := range randomSeq(wordCount, len(words.CommonWords)) {
 			<div class="word">
-				for _, c := range words[idx] {
+				for _, c := range words.CommonWords[idx] {
 					<span class="char">{ string(c) }</span>
 				}
 			</div>
@@ -44,12 +45,22 @@ templ TypingArea(words []string, wordCount int) {
 	</div>
 }
 
-templ Home(words []string, wordCount int) {
+templ Home(words *modals.CommonWords, wordCount int) {
 	<div id="home">
 		@liveStat()
 		@TypingArea(words, wordCount)
 		<button hx-post="/reloadTest" hx-target="#typing-area" hx-trigger="click" hx-swap="outerHTML">↻</button>
-		<button hx-post="/showResult" hx-target="#home" hx-trigger="click" hx-swap="outerHTML">❯ finish</button>
+		<button
+            id="finish-btn"
+			hx-post="/showResult"
+			hx-target="#home"
+			hx-trigger="click"
+			hx-swap="outerHTML"
+			hx-vals='js:{
+            "wpm": document.getElementById("wpm").innerText,
+            "accuracy": document.getElementById("accuracy").innerText
+        }'
+		>❯ finish</button>
 		<script src="/static/js/home.js"></script>
 	</div>
 }

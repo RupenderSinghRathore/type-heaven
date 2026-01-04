@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "math/rand/v2"
 import "iter"
+import "RupenderSinghRathore/type-heaven/internal/modals"
 
 func randomSeq(count, max int) iter.Seq[int] {
 	return func(yield func(int) bool) {
@@ -79,7 +80,7 @@ func liveStat() templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("wpm:")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 24, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 25, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -92,7 +93,7 @@ func liveStat() templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("0")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 25, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 26, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -105,20 +106,20 @@ func liveStat() templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("Accuracy:")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 28, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 29, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span> <span id=\"Accuracy\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span> <span id=\"accuracy\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("100")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 29, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 30, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -132,7 +133,7 @@ func liveStat() templ.Component {
 	})
 }
 
-func TypingArea(words []string, wordCount int) templ.Component {
+func TypingArea(words *modals.CommonWords, wordCount int) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -157,12 +158,12 @@ func TypingArea(words []string, wordCount int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for idx := range randomSeq(wordCount, len(words)) {
+		for idx := range randomSeq(wordCount, len(words.CommonWords)) {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"word\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for _, c := range words[idx] {
+			for _, c := range words.CommonWords[idx] {
 				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<span class=\"char\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -170,7 +171,7 @@ func TypingArea(words []string, wordCount int) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(string(c))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 40, Col: 35}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/view/pages/home.templ`, Line: 41, Col: 35}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -194,7 +195,7 @@ func TypingArea(words []string, wordCount int) templ.Component {
 	})
 }
 
-func Home(words []string, wordCount int) templ.Component {
+func Home(words *modals.CommonWords, wordCount int) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -227,7 +228,7 @@ func Home(words []string, wordCount int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<button hx-post=\"/reloadTest\" hx-target=\"#typing-area\" hx-trigger=\"click\" hx-swap=\"outerHTML\">↻</button> <button hx-post=\"/showResult\" hx-target=\"#home\" hx-trigger=\"click\" hx-swap=\"outerHTML\">❯ finish</button><script src=\"/static/js/home.js\"></script></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<button hx-post=\"/reloadTest\" hx-target=\"#typing-area\" hx-trigger=\"click\" hx-swap=\"outerHTML\">↻</button> <button id=\"finish-btn\" hx-post=\"/showResult\" hx-target=\"#home\" hx-trigger=\"click\" hx-swap=\"outerHTML\" hx-vals='js:{\n            \"wpm\": document.getElementById(\"wpm\").innerText,\n            \"accuracy\": document.getElementById(\"accuracy\").innerText\n        }'>❯ finish</button><script src=\"/static/js/home.js\"></script></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func getCommonWords() ([]string, error) {
+func getCommonWords() (*modals.CommonWords, error) {
 	content, err := os.ReadFile("./web/static/data/common-words.json")
 	if err != nil {
 		return nil, err
@@ -15,5 +15,5 @@ func getCommonWords() ([]string, error) {
 	if err = json.Unmarshal(content, commonWords); err != nil {
 		return nil, err
 	}
-	return commonWords.CommonWords, nil
+	return commonWords, nil
 }
