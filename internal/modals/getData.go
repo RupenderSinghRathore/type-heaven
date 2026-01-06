@@ -19,14 +19,13 @@ func GetWordData() (WordsMap, error) {
 	wordsMap := WordsMap{}
 	var path string
 	for _, file := range files {
-		// path = dataDir + "/" + file
 		path = filepath.Join(dataDir, "/", file)
-		content, err := os.ReadFile(path)
+		f, err := os.Open(path)
 		if err != nil {
 			return nil, err
 		}
 		words := &Words{}
-		if err = json.Unmarshal(content, words); err != nil {
+		if err = json.NewDecoder(f).Decode(words); err != nil {
 			return nil, err
 		}
 		wordsMap[words.Name] = words
