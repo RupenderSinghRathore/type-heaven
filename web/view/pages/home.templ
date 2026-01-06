@@ -20,7 +20,8 @@ templ cssStyle() {
 }
 
 templ liveStat() {
-	<div id="live stats">
+	// <div id="live-stats" style="opacity: 0;">
+	<div id="live-stats">
 		<div>
 			<span>{ "wpm:" }</span>
 			<span id="wpm">{ "0" }</span>
@@ -32,12 +33,12 @@ templ liveStat() {
 	</div>
 }
 
-templ TypingArea(words *modals.CommonWords, wordCount int) {
+templ TypingArea(words *modals.Words, wordCount int) {
 	<div id="typing-area">
 		<div id="caret"></div>
-		for idx := range randomSeq(wordCount, len(words.CommonWords)) {
+		for idx := range randomSeq(wordCount, len(words.Words)) {
 			<div class="word">
-				for _, c := range words.CommonWords[idx] {
+				for _, c := range words.Words[idx] {
 					<span class="char">{ string(c) }</span>
 				}
 			</div>
@@ -45,13 +46,13 @@ templ TypingArea(words *modals.CommonWords, wordCount int) {
 	</div>
 }
 
-templ Home(words *modals.CommonWords, wordCount int) {
+templ Home(words *modals.Words, wordCount int) {
 	<div id="home">
 		@liveStat()
 		@TypingArea(words, wordCount)
 		<button hx-post="/reloadTest" hx-target="#typing-area" hx-trigger="click" hx-swap="outerHTML">↻</button>
 		<button
-            id="finish-btn"
+			id="finish-btn"
 			hx-post="/showResult"
 			hx-target="#home"
 			hx-trigger="click"

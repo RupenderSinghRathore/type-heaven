@@ -11,7 +11,7 @@
 
   font-family: "Ubuntu", "Roboto Mono", "Vazeirmatn", monospace;
   font-size: 1.5rem;
-  margin: 0 48px 0 48px;
+  margin: 48px;
   line-height: var(--line-height);
 
   display: -webkit-box;
