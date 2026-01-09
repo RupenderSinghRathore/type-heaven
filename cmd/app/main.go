@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const wordCount int = 100
+const wordCount int = 5
 const default_words string = "english_1k"
 
 type application struct {

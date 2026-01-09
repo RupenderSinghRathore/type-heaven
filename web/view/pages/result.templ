@@ -16,6 +16,6 @@ templ ResultPage(resultData *ResultData) {
 			<span>{ "Accuracy:" }</span>
 			<span id="accuracy">{ resultData.Accuracy }</span>
 		</div>
-		<button hx-post="/loadHome" hx-target="#result-page" hx-trigger="click" hx-swap="outerHTML">❯ finish</button>
+		<button hx-post="/home" hx-target="#result-page" hx-trigger="click" hx-swap="outerHTML">❯ finish</button>
 	</div>
 }

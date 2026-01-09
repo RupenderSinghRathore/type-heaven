@@ -30,12 +30,22 @@ templ liveStat() {
 			<span>{ "Accuracy:" }</span>
 			<span id="accuracy">{ "100" }</span>
 		</div>
+		// <div>
+		// 	<span>{ "Timer:" }</span>
+		// 	<span id="timer">{ "60" }</span>
+		// </div>
 	</div>
 }
 
 templ TypingArea(words *modals.Words, wordCount int) {
 	<div id="typing-area">
 		<div id="caret"></div>
+		@CreateWord(words, wordCount)
+	</div>
+}
+
+templ CreateWord(words *modals.Words, wordCount int) {
+	<div id="words">
 		for idx := range randomSeq(wordCount, len(words.Words)) {
 			<div class="word">
 				for _, c := range words.Words[idx] {
@@ -46,14 +56,55 @@ templ TypingArea(words *modals.Words, wordCount int) {
 	</div>
 }
 
+templ changeMode(mode string) {
+	<style>
+		#mode-bar {
+			display: flex;
+			gap: 15px;
+		}
+		#time-count,
+		#word-count {
+			display: flex;
+			list-style: none;
+			gap: 15px;
+			padding: 0;
+			margin: 0;
+		}
+	</style>
+	<div id="mode-bar">
+		<div id="modes">
+			<span>word</span>
+			<span>time</span>
+		</div>
+		<div>
+			if mode == "time" {
+				<ul id="time-count">
+					<li>15</li>
+					<li>30</li>
+					<li>60</li>
+					<li>120</li>
+				</ul>
+			} else {
+				<ul id="word-count">
+					<li>10</li>
+					<li>25</li>
+					<li>50</li>
+					<li>100</li>
+				</ul>
+			}
+		</div>
+	</div>
+	<script src="/static/js/modes.js"></script>
+}
 templ Home(words *modals.Words, wordCount int) {
 	<div id="home">
+		// @changeMode(userState.Mode)
 		@liveStat()
 		@TypingArea(words, wordCount)
 		<button hx-post="/reloadTest" hx-target="#typing-area" hx-trigger="click" hx-swap="outerHTML">↻</button>
 		<button
 			id="finish-btn"
-			hx-post="/showResult"
+			hx-post="/result"
 			hx-target="#home"
 			hx-trigger="click"
 			hx-swap="outerHTML"

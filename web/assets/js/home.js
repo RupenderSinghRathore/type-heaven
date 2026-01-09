@@ -56,13 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
       errorCount = 0;
       lineHieght = parseFloat(window.getComputedStyle(typingArea).lineHeight);
 
+      time = 60;
+      mode = "time";
+
       const updateStat = setInterval(() => {
         if (!document.getElementById("home")) {
           clearInterval(updateStat);
           return;
         }
-        // updateWpm();
-        // updateAccuracy();
         UpdateStat();
       }, 500);
 
@@ -71,7 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
       typingArea.focus();
       typingArea.removeEventListener("keydown", HandleTyping);
       typingArea.addEventListener("keydown", HandleTyping);
+
+      typingArea.removeEventListener("blur", NotTyping);
       typingArea.addEventListener("blur", NotTyping);
+
       setTimeout(() => {
         updateCaret();
       }, 100);
@@ -86,8 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const isModifier = ["Control", "Alt", "Shift", "Meta", "CapsLock"].includes(e.key);
       if (!isModifier) {
         isTyping = true;
-        let wait = new Date().getTime() - waitTime;
-        startTime = startTime ? startTime + wait : new Date().getTime();
+        // let wait = new Date().getTime() - waitTime;
+        let wait = performance.now() - waitTime;
+        // startTime = startTime ? startTime + wait : new Date().getTime();
+        startTime = startTime ? startTime + wait : performance.now();
       }
     }
 
@@ -223,12 +229,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function NotTyping() {
     isTyping = false;
-    waitTime = new Date().getTime()
+    waitTime = performance.now();
   }
   function UpdateStat() {
     if (!isTyping) return;
     // updateWpm
-    let time = (new Date().getTime() - startTime) / 60000;
+    let time = (performance.now() - startTime) / 60000;
     wpm.innerText = Math.floor(correctChar / 5 / time);
 
     // updateAccuracy
@@ -258,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.addEventListener("htmx:afterSwap", (e) => {
-    if (e.detail.target.id === "typing-area" || e.detail.target.id === "result-page") {
+    if (e.detail.target.id === "words" || e.detail.target.id === "result-page") {
       init();
     }
   });

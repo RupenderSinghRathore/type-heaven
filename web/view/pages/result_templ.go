@@ -86,7 +86,7 @@ func ResultPage(resultData *ResultData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><button hx-post=\"/loadHome\" hx-target=\"#result-page\" hx-trigger=\"click\" hx-swap=\"outerHTML\">❯ finish</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><button hx-post=\"/home\" hx-target=\"#result-page\" hx-trigger=\"click\" hx-swap=\"outerHTML\">❯ finish</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
